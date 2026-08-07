@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2N Site Access & Muster Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+
+  <!-- LOGIN SECTION -->
+  <div id="login-view" class="flex items-center justify-center min-h-screen px-4">
+    <div class="bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700 w-full max-w-md">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Access Control System</h1>
+        <p class="text-slate-400 text-sm mt-1">Sign in to view live site presence</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Email</label>
+          <input id="login-email" type="email" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Password</label>
+          <input id="login-password" type="password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+        </div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition">Sign In</button>
+        <p id="login-error" class="text-red-400 text-sm text-center hidden"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SECTION (Hidden by default) -->
+  <div id="dashboard-view" class="hidden min-h-screen p-6 max-w-7xl mx-auto space-y-6">
+    
+    <!-- Top Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+          <span>🏢 Site Presence & Muster Control</span>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Live</span>
+        </h1>
+        <p class="text-slate-400 text-sm">Real-time sync active from 2N Access Commander</p>
+      </div>
+      <button id="logout-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 text-sm transition self-start md:self-auto">Logout</button>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Onsite Currently</p>
+        <p id="count-onsite" class="text-3xl font-extrabold text-emerald-400 mt-2">0</p>
+      </div>
+      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mustered / Accounted For</p>
+        <p id="count-mustered" class="text-3xl font-extrabold text-blue-400 mt-2">0</p>
+      </div>
+      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Offsite</p>
+        <p id="count-offsite" class="text-3xl font-extrabold text-slate-400 mt-2">0</p>
+      </div>
+    </div>
+
+    <!-- User Status Table -->
+    <div class="bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden shadow-lg">
+      <div class="px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
+        <h2 class="font-semibold text-slate-200">User Presence Register</h2>
+        <input id="search-input" type="text" placeholder="Search user or zone..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 w-64">
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-900/60 text-slate-400 uppercase text-xs">
+            <tr>
+              <th class="px-6 py-3">User Name</th>
+              <th class="px-6 py-3">User ID</th>
+              <th class="px-6 py-3">Status</th>
+              <th class="px-6 py-3">Last Zone Reader</th>
+              <th class="px-6 py-3">Last Updated</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body" class="divide-y divide-slate-700/50">
+            <!-- Rows dynamically injected here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // === CONFIGURATION ===
+    const SUPABASE_URL = "https://xwhudblncybhnpywtbyz.supabase.co"; // Replace with your project URL
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3aHVkYmxuY3liaG5weXd0Ynl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTM1MzIsImV4cCI6MjEwMTY2OTUzMn0.KGmqXn79Lz1yAgkMhnhHFq3OnU4ASDs5TpLvB7wxLaM";// Replace with your ANON key
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let usersMap = new Map();
+
+    // === AUTHENTICATION LOGIC ===
+    const loginView = document.getElementById('login-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    db.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        loginView.classList.add('hidden');
+        dashboardView.classList.remove('hidden');
+        initDashboard();
+      } else {
+        loginView.classList.remove('hidden');
+        dashboardView.classList.add('hidden');
+      }
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.add('hidden');
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginError.textContent = error.message;
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => db.auth.signOut());
+
+    // === DASHBOARD & REALTIME LOGIC ===
+    async function initDashboard() {
+      // Initial Load
+      const { data, error } = await db.from('presence_state').select('*').order('last_updated', { ascending: false });
+      if (!error && data) {
+        data.forEach(user => usersMap.set(user.user_id, user));
+        renderUI();
+      }
+
+      // Realtime WebSocket Subscription
+      db.channel('public:presence_state')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'presence_state' }, (payload) => {
+          usersMap.set(payload.new.user_id, payload.new);
+          renderUI();
+        })
+        .subscribe();
+    }
+
+    function renderUI() {
+      const users = Array.from(usersMap.values());
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      
+      let onsite = 0, mustered = 0, offsite = 0;
+      const tbody = document.getElementById('user-table-body');
+      tbody.innerHTML = '';
+
+      users.forEach(u => {
+        if (u.status === 'ONSITE') onsite++;
+        if (u.status === 'MUSTERED') mustered++;
+        if (u.status === 'OFFSITE') offsite++;
+
+        if (searchTerm && !u.user_name.toLowerCase().includes(searchTerm) && !u.last_zone.toLowerCase().includes(searchTerm)) {
+          return;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-700/30 transition';
+        
+        let badgeStyle = 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        if (u.status === 'ONSITE') badgeStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        if (u.status === 'MUSTERED') badgeStyle = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+
+        tr.innerHTML = `
+          <td class="px-6 py-4 font-medium text-white">${u.user_name}</td>
+          <td class="px-6 py-4 text-slate-400">${u.user_id}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeStyle}">
+              ${u.status}
+            </span>
+          </td>
+          <td class="px-6 py-4 text-slate-300">${u.last_zone || '-'}</td>
+          <td class="px-6 py-4 text-slate-400 text-xs">${new Date(u.last_updated).toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('count-onsite').textContent = onsite;
+      document.getElementById('count-mustered').textContent = mustered;
+      document.getElementById('count-offsite').textContent = offsite;
+    }
+
+    document.getElementById('search-input').addEventListener('input', renderUI);
+  </script>
+</body>
+</html>
