@@ -1,86 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2N Site Access & Muster Dashboard</title>
+  <title>Live Site Presence & Muster Dashboard</title>
+  <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen">
+<body class="h-full text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- LOGIN SECTION -->
-  <div id="login-view" class="flex items-center justify-center min-h-screen px-4">
-    <div class="bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700 w-full max-w-md">
-      <div class="text-center mb-6">
-        <h1 class="text-2xl font-bold text-white">Access Control System</h1>
-        <p class="text-slate-400 text-sm mt-1">Sign in to view live site presence</p>
+  <div id="login-view" class="flex min-h-full items-center justify-center p-6">
+    <div class="glass-card w-full max-w-md rounded-2xl p-8 shadow-2xl">
+      <div class="mb-8 text-center">
+        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600/20 text-indigo-400 mb-3 border border-indigo-500/30">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Site Security Portal</h1>
+        <p class="mt-1 text-sm text-slate-400">Sign in to access real-time presence control</p>
       </div>
-      <form id="login-form" class="space-y-4">
+
+      <form id="login-form" class="space-y-5">
         <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Email</label>
-          <input id="login-email" type="email" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Email Address</label>
+          <input id="login-email" type="email" required placeholder="admin@company.com" class="w-full rounded-xl bg-slate-900/80 border border-slate-700/80 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition">
         </div>
         <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Password</label>
-          <input id="login-password" type="password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Password</label>
+          <input id="login-password" type="password" required placeholder="••••••••" class="w-full rounded-xl bg-slate-900/80 border border-slate-700/80 px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition">
         </div>
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 rounded-lg transition">Sign In</button>
-        <p id="login-error" class="text-red-400 text-sm text-center hidden"></p>
+        <button type="submit" class="w-full rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 text-sm shadow-lg shadow-indigo-600/30 transition duration-200">
+          Sign In
+        </button>
+        <p id="login-error" class="text-xs text-red-400 text-center hidden font-medium"></p>
       </form>
     </div>
   </div>
 
-  <!-- DASHBOARD SECTION (Hidden by default) -->
-  <div id="dashboard-view" class="hidden min-h-screen p-6 max-w-7xl mx-auto space-y-6">
+  <!-- DASHBOARD SECTION -->
+  <div id="dashboard-view" class="hidden min-h-full p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
     
-    <!-- Top Bar -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
       <div>
-        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-          <span>🏢 Site Presence & Muster Control</span>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Live</span>
-        </h1>
-        <p class="text-slate-400 text-sm">Real-time sync active from 2N Access Commander</p>
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-extrabold text-white tracking-tight">Site Muster & Occupancy</h1>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Live Sync
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Integrated 2N Access Commander presence monitoring</p>
       </div>
-      <button id="logout-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 text-sm transition self-start md:self-auto">Logout</button>
+
+      <button id="logout-btn" class="self-start sm:self-auto px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition">
+        Sign Out
+      </button>
+    </header>
+
+    <!-- Metrics Overview -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="glass-card rounded-2xl p-5">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Onsite Currently</span>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="count-onsite" class="text-4xl font-extrabold text-emerald-400">0</span>
+          <span class="text-xs font-medium text-emerald-500/80 bg-emerald-500/10 px-2 py-1 rounded-lg">Active</span>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mustered / Accounted</span>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="count-mustered" class="text-4xl font-extrabold text-sky-400">0</span>
+          <span class="text-xs font-medium text-sky-500/80 bg-sky-500/10 px-2 py-1 rounded-lg">Safe Zone</span>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Offsite</span>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span id="count-offsite" class="text-4xl font-extrabold text-slate-400">0</span>
+          <span class="text-xs font-medium text-slate-400 bg-slate-800 px-2 py-1 rounded-lg">Cleared</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Metrics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
-        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Onsite Currently</p>
-        <p id="count-onsite" class="text-3xl font-extrabold text-emerald-400 mt-2">0</p>
+    <!-- Data Register Table -->
+    <div class="glass-card rounded-2xl overflow-hidden shadow-2xl">
+      <!-- Search Bar & Controls -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 class="text-base font-bold text-white">Live Personnel Directory</h2>
+        <div class="relative w-full sm:w-80">
+          <svg class="absolute left-3.5 top-3 h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="search-input" type="text" placeholder="Search user, company, phone, zone..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+        </div>
       </div>
-      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
-        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Mustered / Accounted For</p>
-        <p id="count-mustered" class="text-3xl font-extrabold text-blue-400 mt-2">0</p>
-      </div>
-      <div class="bg-slate-800 border border-slate-700/60 p-5 rounded-xl">
-        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Offsite</p>
-        <p id="count-offsite" class="text-3xl font-extrabold text-slate-400 mt-2">0</p>
-      </div>
-    </div>
 
-    <!-- User Status Table -->
-    <div class="bg-slate-800 border border-slate-700/60 rounded-xl overflow-hidden shadow-lg">
-      <div class="px-6 py-4 border-b border-slate-700/60 flex justify-between items-center">
-        <h2 class="font-semibold text-slate-200">User Presence Register</h2>
-        <input id="search-input" type="text" placeholder="Search user or zone..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 w-64">
-      </div>
+      <!-- Table -->
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-300">
-          <thead class="bg-slate-900/60 text-slate-400 uppercase text-xs">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/80 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800">
             <tr>
-              <th class="px-6 py-3">User Name</th>
-              <th class="px-6 py-3">User ID</th>
-              <th class="px-6 py-3">Status</th>
-              <th class="px-6 py-3">Last Zone Reader</th>
-              <th class="px-6 py-3">Last Updated</th>
+              <th class="px-6 py-4">User Details</th>
+              <th class="px-6 py-4">Company</th>
+              <th class="px-6 py-4">Phone Number</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4">Last Zone Reader</th>
+              <th class="px-6 py-4">Last Updated</th>
             </tr>
           </thead>
-          <tbody id="user-table-body" class="divide-y divide-slate-700/50">
-            <!-- Rows dynamically injected here -->
+          <tbody id="user-table-body" class="divide-y divide-slate-800/60 font-medium">
+            <!-- Dynamic rows injected here -->
           </tbody>
         </table>
       </div>
@@ -90,20 +135,20 @@
 
   <script>
     // === CONFIGURATION ===
-    const SUPABASE_URL = "https://xwhudblncybhnpywtbyz.supabase.co"; // Replace with your project URL
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3aHVkYmxuY3liaG5weXd0Ynl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTM1MzIsImV4cCI6MjEwMTY2OTUzMn0.KGmqXn79Lz1yAgkMhnhHFq3OnU4ASDs5TpLvB7wxLaM";// Replace with your ANON key
+    const SUPABASE_URL = "https://xwhudblncybhnpywtbyz.supabase.co"; // Replace with your URL
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3aHVkYmxuY3liaG5weXd0Ynl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTM1MzIsImV4cCI6MjEwMTY2OTUzMn0.KGmqXn79Lz1yAgkMhnhHFq3OnU4ASDs5TpLvB7wxLaM";         // Replace with your ANON Key
 
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let usersMap = new Map();
 
-    // === AUTHENTICATION LOGIC ===
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
 
+    // Authentication Listener
     db.auth.onAuthStateChange((event, session) => {
       if (session) {
         loginView.classList.add('hidden');
@@ -130,16 +175,14 @@
 
     document.getElementById('logout-btn').addEventListener('click', () => db.auth.signOut());
 
-    // === DASHBOARD & REALTIME LOGIC ===
+    // Load Data & Subscribe to Realtime
     async function initDashboard() {
-      // Initial Load
       const { data, error } = await db.from('presence_state').select('*').order('last_updated', { ascending: false });
       if (!error && data) {
         data.forEach(user => usersMap.set(user.user_id, user));
         renderUI();
       }
 
-      // Realtime WebSocket Subscription
       db.channel('public:presence_state')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'presence_state' }, (payload) => {
           usersMap.set(payload.new.user_id, payload.new);
@@ -150,7 +193,7 @@
 
     function renderUI() {
       const users = Array.from(usersMap.values());
-      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const query = document.getElementById('search-input').value.toLowerCase();
       
       let onsite = 0, mustered = 0, offsite = 0;
       const tbody = document.getElementById('user-table-body');
@@ -161,27 +204,49 @@
         if (u.status === 'MUSTERED') mustered++;
         if (u.status === 'OFFSITE') offsite++;
 
-        if (searchTerm && !u.user_name.toLowerCase().includes(searchTerm) && !u.last_zone.toLowerCase().includes(searchTerm)) {
-          return;
-        }
+        // Search Filter Logic
+        const match = [u.user_name, u.company_name, u.telephone_number, u.last_zone, u.user_id]
+          .some(field => field && field.toLowerCase().includes(query));
+
+        if (query && !match) return;
 
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-700/30 transition';
-        
+        tr.className = 'hover:bg-slate-800/40 transition duration-150';
+
+        // Badge Styling
         let badgeStyle = 'bg-slate-500/10 text-slate-400 border-slate-500/20';
-        if (u.status === 'ONSITE') badgeStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-        if (u.status === 'MUSTERED') badgeStyle = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        let badgeDot = 'bg-slate-400';
+        if (u.status === 'ONSITE') {
+          badgeStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+          badgeDot = 'bg-emerald-400';
+        }
+        if (u.status === 'MUSTERED') {
+          badgeStyle = 'bg-sky-500/10 text-sky-400 border-sky-500/20';
+          badgeDot = 'bg-sky-400';
+        }
+
+        const phoneDisplay = u.telephone_number && u.telephone_number !== 'N/A' 
+          ? `<a href="tel:${u.telephone_number}" class="text-indigo-400 hover:underline flex items-center gap-1">
+               <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+               ${u.telephone_number}
+             </a>`
+          : '<span class="text-slate-500">N/A</span>';
 
         tr.innerHTML = `
-          <td class="px-6 py-4 font-medium text-white">${u.user_name}</td>
-          <td class="px-6 py-4 text-slate-400">${u.user_id}</td>
           <td class="px-6 py-4">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeStyle}">
+            <div class="font-bold text-white">${u.user_name}</div>
+            <div class="text-[10px] text-slate-500 font-mono">ID: ${u.user_id}</div>
+          </td>
+          <td class="px-6 py-4 text-slate-300 font-semibold">${u.company_name || 'N/A'}</td>
+          <td class="px-6 py-4">${phoneDisplay}</td>
+          <td class="px-6 py-4">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${badgeStyle}">
+              <span class="h-1.5 w-1.5 rounded-full ${badgeDot}"></span>
               ${u.status}
             </span>
           </td>
           <td class="px-6 py-4 text-slate-300">${u.last_zone || '-'}</td>
-          <td class="px-6 py-4 text-slate-400 text-xs">${new Date(u.last_updated).toLocaleString()}</td>
+          <td class="px-6 py-4 text-slate-400 text-[11px]">${new Date(u.last_updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}</td>
         `;
         tbody.appendChild(tr);
       });
