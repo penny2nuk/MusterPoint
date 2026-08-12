@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Site Presence & Muster Dashboard</title>
+  <title>Live Site Presence & Muster Dashboard 2.0</title>
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,9 +69,16 @@
         <p class="text-xs text-slate-400 mt-1">Integrated 2N Access Commander presence monitoring</p>
       </div>
 
-      <button id="logout-btn" class="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition">
-        Sign Out
-      </button>
+      <!-- Header Buttons -->
+      <div class="flex items-center gap-3 self-start sm:self-auto">
+        <button id="open-settings-btn" class="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </button>
+        <button id="logout-btn" class="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-xl transition">
+          Sign Out
+        </button>
+      </div>
     </header>
 
     <!-- Metrics Cards -->
@@ -145,10 +152,47 @@
 
   </div>
 
+  <!-- SETTINGS MODAL -->
+  <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-slate-700">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <h3 class="text-lg font-extrabold text-white flex items-center gap-2">
+          <span>⚙️ System Configuration</span>
+        </h3>
+        <button id="close-settings-btn" class="text-slate-400 hover:text-white transition text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-4 py-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            Exit Reader Keywords (Comma Separated)
+          </label>
+          <p class="text-[11px] text-slate-500 mb-2">Devices matching these names will mark users as OFFSITE.</p>
+          <input id="setting-exit-readers" type="text" placeholder="KIOSK VERSO, EXIT, OUT" class="w-full rounded-xl bg-slate-900/90 border border-slate-700/80 px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
+            Muster Reader Keywords (Comma Separated)
+          </label>
+          <p class="text-[11px] text-slate-500 mb-2">Devices matching these names will mark users as MUSTERED.</p>
+          <input id="setting-muster-readers" type="text" placeholder="MUSTER, ASSEMBLY, PARKING LOT" class="w-full rounded-xl bg-slate-900/90 border border-slate-700/80 px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+        <button id="cancel-settings-btn" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition">Cancel</button>
+        <button id="save-settings-btn" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-lg shadow-indigo-600/30 transition">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // === CONFIGURATION ===
-    const SUPABASE_URL = "https://xwhudblncybhnpywtbyz.supabase.co"; 
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3aHVkYmxuY3liaG5weXd0Ynl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwOTM1MzIsImV4cCI6MjEwMTY2OTUzMn0.KGmqXn79Lz1yAgkMhnhHFq3OnU4ASDs5TpLvB7wxLaM";
+    const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co"; // Replace with your Project URL
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";         // Replace with your ANON Key
 
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -156,11 +200,12 @@
     let usersMap = new Map();
     let currentFilter = 'ALL';
 
-    // Auth & View elements
+    // UI View Elements
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
+    const settingsModal = document.getElementById('settings-modal');
 
     // Auth State Listener
     db.auth.onAuthStateChange((event, session) => {
@@ -189,23 +234,7 @@
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => db.auth.signOut());
-    // Save Config Button Handler
-       async function saveSystemSettings(exitReadersArray, musterReadersArray) {
-         const { error } = await db
-           .from('system_config')
-           .update({
-      exit_readers: exitReadersArray,
-      muster_readers: musterReadersArray,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', 1);
 
-  if (error) {
-    alert("Error saving settings: " + error.message);
-  } else {
-    alert("System settings saved successfully! Node-RED will use these new reader definitions.");
-  }
-}
     // Filter Button Handler
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -216,6 +245,46 @@
         currentFilter = e.target.getAttribute('data-filter');
         renderUI();
       });
+    });
+
+    // Settings Modal Open/Close Handlers
+    document.getElementById('open-settings-btn').addEventListener('click', async () => {
+      settingsModal.classList.remove('hidden');
+      // Fetch existing system_config from Supabase
+      const { data, error } = await db.from('system_config').select('*').eq('id', 1).single();
+      if (!error && data) {
+        document.getElementById('setting-exit-readers').value = (data.exit_readers || []).join(', ');
+        document.getElementById('setting-muster-readers').value = (data.muster_readers || []).join(', ');
+      }
+    });
+
+    const closeSettings = () => settingsModal.classList.add('hidden');
+    document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
+    document.getElementById('cancel-settings-btn').addEventListener('click', closeSettings);
+
+    // Save Settings Handler
+    document.getElementById('save-settings-btn').addEventListener('click', async () => {
+      const exitVal = document.getElementById('setting-exit-readers').value;
+      const musterVal = document.getElementById('setting-muster-readers').value;
+
+      const exitArr = exitVal.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      const musterArr = musterVal.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+
+      const { error } = await db
+        .from('system_config')
+        .upsert({
+          id: 1,
+          exit_readers: exitArr,
+          muster_readers: musterArr,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) {
+        alert("Error saving config: " + error.message + "\nEnsure you created the system_config table and RLS policies!");
+      } else {
+        alert("Settings saved successfully!");
+        closeSettings();
+      }
     });
 
     // Manual Override: Mark User as Mustered
@@ -230,7 +299,7 @@
         .eq('user_id', userId);
 
       if (error) {
-        alert("Failed to update user status: " + error.message + "\nMake sure you ran the SQL UPDATE policy in Supabase!");
+        alert("Failed to update user status: " + error.message);
       }
     };
 
