@@ -151,7 +151,27 @@
     </div>
 
   </div>
-
+   <!-- Footer Disclaimer -->
+    <footer class="pt-6 pb-8 border-t border-slate-800/80 text-center sm:text-left">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 glass-card p-5 rounded-2xl border border-slate-800/80">
+        <div class="flex items-start gap-3">
+          <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 mt-0.5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Operational Disclaimer & Notice</h4>
+            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+              Data displayed on this board is automatically aggregated from 2N Access Commander event logs and scheduled syncs. Due to possible network latencies or offline device states, site presence counts may not reflect live physical occupancy. This tool is provided strictly for secondary informational assistance and <strong>must not replace official statutory emergency evacuation protocols or physical muster headcounts</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-600 mt-4 text-center font-medium">
+        &copy; <script>document.write(new Date().getFullYear())</script> All rights reserved. Presence & Muster Management System.
+      </p>
+    </footer>
   <!-- SETTINGS MODAL -->
   <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-slate-700">
