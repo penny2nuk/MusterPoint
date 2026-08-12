@@ -189,7 +189,23 @@
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => db.auth.signOut());
+    // Save Config Button Handler
+       async function saveSystemSettings(exitReadersArray, musterReadersArray) {
+         const { error } = await db
+           .from('system_config')
+           .update({
+      exit_readers: exitReadersArray,
+      muster_readers: musterReadersArray,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', 1);
 
+  if (error) {
+    alert("Error saving settings: " + error.message);
+  } else {
+    alert("System settings saved successfully! Node-RED will use these new reader definitions.");
+  }
+}
     // Filter Button Handler
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
