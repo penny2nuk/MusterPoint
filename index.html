@@ -138,7 +138,8 @@
               <th class="px-6 py-4.5">Company</th>
               <th class="px-6 py-4.5">Phone Number</th>
               <th class="px-6 py-4.5">Status</th>
-              <th class="px-6 py-4.5">Last Zone Reader</th>
+              <th class="px-6 py-4.5">Zone</th>
+              <th class="px-6 py-4.5">Last Reader</th>
               <th class="px-6 py-4.5">Last Updated</th>
               <th class="px-6 py-4.5">Action</th>
             </tr>
@@ -150,28 +151,26 @@
       </div>
     </div>
 
-  </div>
-   <!-- Footer Disclaimer -->
-    <footer class="pt-6 pb-8 border-t border-slate-800/80 text-center sm:text-left">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 glass-card p-5 rounded-2xl border border-slate-800/80">
-        <div class="flex items-start gap-3">
-          <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 mt-0.5">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-          </div>
-          <div>
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Operational Disclaimer & Notice</h4>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Data displayed on this board is automatically aggregated from 2N Access Commander event logs and scheduled syncs. Due to possible network latencies or offline device states, site presence counts may not reflect live physical occupancy. This tool is provided strictly for secondary informational assistance and <strong>must not replace official statutory emergency evacuation protocols or physical muster headcounts</strong>.
-            </p>
-          </div>
+    <!-- COMPACT & CONSTRAINED DISCLAIMER -->
+    <footer class="pt-2 pb-6">
+      <div class="glass-card p-4 rounded-2xl border border-slate-800/80 flex items-start gap-3">
+        <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="text-xs text-slate-400 leading-relaxed">
+          <span class="font-bold uppercase tracking-wider text-slate-300 block mb-0.5">Operational Notice & Disclaimer</span>
+          Data displayed is automatically aggregated from 2N Access Commander logs. Due to network latencies or offline device states, site presence counts may not reflect live physical occupancy. This tool is for secondary informational assistance only and <strong>must not replace official statutory emergency evacuation protocols or physical muster headcounts</strong>.
         </div>
       </div>
-      <p class="text-[11px] text-slate-600 mt-4 text-center font-medium">
-        &copy; <script>document.write(new Date().getFullYear())</script> All rights reserved. Presence & Muster Management System.
+      <p class="text-[11px] text-slate-600 mt-3 text-center font-medium">
+        &copy; <script>document.write(new Date().getFullYear())</script> Presence & Muster Management System.
       </p>
     </footer>
+
+  </div>
+
   <!-- SETTINGS MODAL -->
   <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-slate-700">
@@ -220,7 +219,6 @@
     let usersMap = new Map();
     let currentFilter = 'ALL';
 
-    // UI View Elements
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
     const loginForm = document.getElementById('login-form');
@@ -239,7 +237,7 @@
       }
     });
 
-    // Login Form Handler
+    // Login Handler
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       loginError.classList.add('hidden');
@@ -255,7 +253,7 @@
 
     document.getElementById('logout-btn').addEventListener('click', () => db.auth.signOut());
 
-    // Filter Button Handler
+    // Filter Pills Handler
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => {
@@ -267,7 +265,7 @@
       });
     });
 
-    // Settings Modal Open/Close Handlers
+    // Settings Modal
     document.getElementById('open-settings-btn').addEventListener('click', async () => {
       settingsModal.classList.remove('hidden');
       const { data, error } = await db.from('system_config').select('*').eq('id', 1).single();
@@ -281,7 +279,6 @@
     document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
     document.getElementById('cancel-settings-btn').addEventListener('click', closeSettings);
 
-    // Save Settings Handler
     document.getElementById('save-settings-btn').addEventListener('click', async () => {
       const exitVal = document.getElementById('setting-exit-readers').value;
       const musterVal = document.getElementById('setting-muster-readers').value;
@@ -289,40 +286,32 @@
       const exitArr = exitVal.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
       const musterArr = musterVal.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
 
-      const { error } = await db
-        .from('system_config')
-        .upsert({
-          id: 1,
-          exit_readers: exitArr,
-          muster_readers: musterArr,
-          updated_at: new Date().toISOString()
-        });
+      const { error } = await db.from('system_config').upsert({
+        id: 1,
+        exit_readers: exitArr,
+        muster_readers: musterArr,
+        updated_at: new Date().toISOString()
+      });
 
-      if (error) {
-        alert("Error saving config: " + error.message);
-      } else {
+      if (error) alert("Error saving config: " + error.message);
+      else {
         alert("Settings saved successfully!");
         closeSettings();
       }
     });
 
-    // Manual Override: Mark User as Mustered
+    // Manual Mustered Action
     window.markAsMustered = async function(userId) {
-      const { error } = await db
-        .from('presence_state')
-        .update({
-          status: 'MUSTERED',
-          last_zone: 'Web Manual Override',
-          last_updated: new Date().toISOString()
-        })
-        .eq('user_id', userId);
+      const { error } = await db.from('presence_state').update({
+        status: 'MUSTERED',
+        last_zone: 'Web Manual Override',
+        last_updated: new Date().toISOString()
+      }).eq('user_id', userId);
 
-      if (error) {
-        alert("Failed to update user status: " + error.message);
-      }
+      if (error) alert("Failed to update status: " + error.message);
     };
 
-    // Load Data & Subscribe to Realtime
+    // Load Data & Subscribe
     async function initDashboard() {
       const { data, error } = await db.from('presence_state').select('*').order('last_updated', { ascending: false });
       if (!error && data) {
@@ -338,7 +327,7 @@
         .subscribe();
     }
 
-    // Render Table & Counters
+    // Render Table
     function renderUI() {
       const users = Array.from(usersMap.values());
       const query = document.getElementById('search-input').value.toLowerCase();
@@ -348,23 +337,19 @@
       tbody.innerHTML = '';
 
       users.forEach(u => {
-        // Global Metrics Calculation
         if (u.status === 'ONSITE') onsite++;
         if (u.status === 'MUSTERED') mustered++;
         if (u.status === 'OFFSITE') offsite++;
 
-        // Status Pill Filter
         if (currentFilter !== 'ALL' && u.status !== currentFilter) return;
 
-        // Search Filter
-        const match = [u.user_name, u.company_name, u.telephone_number, u.last_zone]
+        const match = [u.user_name, u.company_name, u.telephone_number, u.last_zone, u.zone_name]
           .some(field => field && field.toLowerCase().includes(query));
         if (query && !match) return;
 
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/50 transition duration-150 border-b border-slate-800/60';
 
-        // Badge Styling
         let badgeStyle = 'bg-slate-500/10 text-slate-300 border-slate-500/20';
         let badgeDot = 'bg-slate-400';
         if (u.status === 'ONSITE') {
@@ -383,7 +368,6 @@
              </a>`
           : '<span class="text-slate-500">N/A</span>';
 
-        // Action Column Button
         const actionButton = u.status === 'ONSITE' 
           ? `<button onclick="markAsMustered('${u.user_id}')" class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 hover:bg-sky-500/40 border border-sky-500/30 transition shadow-sm">
                Mark Mustered
@@ -400,6 +384,7 @@
               ${u.status}
             </span>
           </td>
+          <td class="px-6 py-4.5 text-slate-200 font-semibold text-sm">${u.zone_name || '-'}</td>
           <td class="px-6 py-4.5 text-slate-200 font-medium text-sm">${u.last_zone || '-'}</td>
           <td class="px-6 py-4.5 text-slate-400 text-xs font-medium">${new Date(u.last_updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}</td>
           <td class="px-6 py-4.5">${actionButton}</td>
@@ -407,7 +392,6 @@
         tbody.appendChild(tr);
       });
 
-      // Update Top Counters
       document.getElementById('count-onsite').textContent = onsite;
       document.getElementById('count-mustered').textContent = mustered;
       document.getElementById('count-offsite').textContent = offsite;
