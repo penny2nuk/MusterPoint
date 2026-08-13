@@ -50,76 +50,76 @@
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD VIEW -->
-  <div id="dashboard-view" class="hidden min-h-full p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+  <!-- MAIN DASHBOARD VIEW (ULTRA-WIDE LAYOUT) -->
+  <div id="dashboard-view" class="hidden min-h-full p-6 sm:p-8 lg:p-10 max-w-[1700px] mx-auto space-y-8">
     
     <!-- Top Header Bar -->
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-800">
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
       <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-3xl font-black text-white tracking-tight">Site Muster & Occupancy</h1>
-          <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        <div class="flex items-center gap-4">
+          <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">Site Muster & Occupancy</h1>
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
             <span class="relative flex h-2.5 w-2.5">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            Live Sync
+            Live Sync Active
           </span>
         </div>
-        <p class="text-sm text-slate-400 mt-1">Integrated 2N Access Commander presence monitoring</p>
+        <p class="text-base text-slate-400 mt-1">Integrated 2N Access Commander presence monitoring</p>
       </div>
 
       <!-- Header Buttons -->
-      <div class="flex items-center gap-3 self-start sm:self-auto">
-        <button id="open-settings-btn" class="px-4 py-2.5 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition flex items-center gap-2">
+      <div class="flex items-center gap-3.5 self-start sm:self-auto">
+        <button id="open-settings-btn" class="px-5 py-2.5 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition flex items-center gap-2 shadow-md">
           <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           Settings
         </button>
-        <button id="logout-btn" class="px-4 py-2.5 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition">
+        <button id="logout-btn" class="px-5 py-2.5 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition shadow-md">
           Sign Out
         </button>
       </div>
     </header>
 
-    <!-- Metrics Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-      <div class="glass-card rounded-2xl p-6">
-        <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Onsite Currently</span>
+    <!-- Metrics Cards (Spaced out for Widescreens) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-7 shadow-xl">
+        <span class="text-xs font-extrabold text-slate-300 uppercase tracking-widest">Onsite Currently</span>
         <div class="mt-3 flex items-baseline justify-between">
-          <span id="count-onsite" class="text-5xl font-black text-emerald-400 tracking-tight">0</span>
-          <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">Active</span>
+          <span id="count-onsite" class="text-6xl font-black text-emerald-400 tracking-tight">0</span>
+          <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl">Active Occupants</span>
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl p-6">
-        <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Mustered / Accounted</span>
+      <div class="glass-card rounded-2xl p-7 shadow-xl">
+        <span class="text-xs font-extrabold text-slate-300 uppercase tracking-widest">Mustered / Accounted</span>
         <div class="mt-3 flex items-baseline justify-between">
-          <span id="count-mustered" class="text-5xl font-black text-sky-400 tracking-tight">0</span>
-          <span class="text-xs font-bold text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-lg">Safe Zone</span>
+          <span id="count-mustered" class="text-6xl font-black text-sky-400 tracking-tight">0</span>
+          <span class="text-xs font-bold text-sky-400 bg-sky-500/10 border border-sky-500/30 px-3 py-1.5 rounded-xl">Safe Zone</span>
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl p-6">
-        <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Offsite</span>
+      <div class="glass-card rounded-2xl p-7 shadow-xl">
+        <span class="text-xs font-extrabold text-slate-300 uppercase tracking-widest">Offsite</span>
         <div class="mt-3 flex items-baseline justify-between">
-          <span id="count-offsite" class="text-5xl font-black text-slate-400 tracking-tight">0</span>
-          <span class="text-xs font-bold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">Cleared</span>
+          <span id="count-offsite" class="text-6xl font-black text-slate-400 tracking-tight">0</span>
+          <span class="text-xs font-bold text-slate-400 bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700">Cleared</span>
         </div>
       </div>
     </div>
 
     <!-- Data Register Table Card -->
-    <div class="glass-card rounded-2xl overflow-hidden shadow-2xl">
+    <div class="glass-card rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
       
       <!-- Controls Bar (Filter Pills & Search) -->
-      <div class="p-5 border-b border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="p-6 border-b border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
         
         <!-- Status Filter Pills -->
-        <div class="flex flex-wrap items-center gap-2.5" id="filter-container">
-          <button data-filter="ALL" class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-700 text-white transition">All Users</button>
-          <button data-filter="ONSITE" class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Onsite</button>
-          <button data-filter="MUSTERED" class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Mustered</button>
-          <button data-filter="OFFSITE" class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Offsite</button>
+        <div class="flex flex-wrap items-center gap-3" id="filter-container">
+          <button data-filter="ALL" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-700 text-white transition shadow-md">All Users</button>
+          <button data-filter="ONSITE" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Onsite</button>
+          <button data-filter="MUSTERED" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Mustered</button>
+          <button data-filter="OFFSITE" class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800">Offsite</button>
         </div>
 
         <!-- Search Bar -->
@@ -134,14 +134,14 @@
         <table class="w-full text-left text-sm text-slate-200">
           <thead class="bg-slate-900/90 text-slate-300 font-bold uppercase tracking-wider text-xs border-b border-slate-800">
             <tr>
-              <th class="px-6 py-4.5">User Name</th>
-              <th class="px-6 py-4.5">Company</th>
-              <th class="px-6 py-4.5">Phone Number</th>
-              <th class="px-6 py-4.5">Status</th>
-              <th class="px-6 py-4.5">Zone</th>
-              <th class="px-6 py-4.5">Last Reader</th>
-              <th class="px-6 py-4.5">Last Updated</th>
-              <th class="px-6 py-4.5">Action</th>
+              <th class="px-8 py-5">User Name</th>
+              <th class="px-8 py-5">Company</th>
+              <th class="px-8 py-5">Phone Number</th>
+              <th class="px-8 py-5">Status</th>
+              <th class="px-8 py-5">Zone</th>
+              <th class="px-8 py-5">Last Reader</th>
+              <th class="px-8 py-5">Last Updated</th>
+              <th class="px-8 py-5">Action</th>
             </tr>
           </thead>
           <tbody id="user-table-body" class="divide-y divide-slate-800/80 font-medium">
@@ -153,19 +153,19 @@
 
     <!-- COMPACT & CONSTRAINED DISCLAIMER -->
     <footer class="pt-2 pb-6">
-      <div class="glass-card p-4 rounded-2xl border border-slate-800/80 flex items-start gap-3">
-        <div class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 mt-0.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="glass-card p-5 rounded-2xl border border-slate-800/80 flex items-start gap-4">
+        <div class="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0 mt-0.5">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
           </svg>
         </div>
         <div class="text-xs text-slate-400 leading-relaxed">
-          <span class="font-bold uppercase tracking-wider text-slate-300 block mb-0.5">Operational Notice & Disclaimer</span>
-          Data displayed is automatically aggregated from 2N Access Commander logs. Due to network latencies or offline device states, site presence counts may not reflect live physical occupancy. This tool is for secondary informational assistance only and <strong>must not replace official statutory emergency evacuation protocols or physical muster headcounts</strong>.
+          <span class="font-bold uppercase tracking-wider text-slate-300 block mb-1">Operational Notice & Legal Disclaimer</span>
+          Data displayed on this board is automatically aggregated from 2N Access Commander event logs and scheduled syncs. Due to possible network latencies or offline device states, site presence counts may not reflect live physical occupancy. This tool is provided strictly for secondary informational assistance and <strong>must not replace official statutory emergency evacuation protocols, physical headcounts, or health and safety procedures</strong>.
         </div>
       </div>
-      <p class="text-[11px] text-slate-600 mt-3 text-center font-medium">
-        &copy; <script>document.write(new Date().getFullYear())</script> Presence & Muster Management System.
+      <p class="text-[11px] text-slate-600 mt-4 text-center font-semibold">
+        &copy; <script>document.write(new Date().getFullYear())</script> Presence & Muster Management System. All rights reserved.
       </p>
     </footer>
 
@@ -219,6 +219,7 @@
     let usersMap = new Map();
     let currentFilter = 'ALL';
 
+    // UI View Elements
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
     const loginForm = document.getElementById('login-form');
@@ -257,15 +258,15 @@
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => {
-          b.className = 'filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800';
+          b.className = 'filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition border border-slate-800';
         });
-        e.target.className = 'filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-700 text-white transition';
+        e.target.className = 'filter-btn px-6 py-2.5 rounded-full text-sm font-bold bg-slate-700 text-white transition shadow-md';
         currentFilter = e.target.getAttribute('data-filter');
         renderUI();
       });
     });
 
-    // Settings Modal
+    // Settings Modal Open/Close Handlers
     document.getElementById('open-settings-btn').addEventListener('click', async () => {
       settingsModal.classList.remove('hidden');
       const { data, error } = await db.from('system_config').select('*').eq('id', 1).single();
@@ -279,6 +280,7 @@
     document.getElementById('close-settings-btn').addEventListener('click', closeSettings);
     document.getElementById('cancel-settings-btn').addEventListener('click', closeSettings);
 
+    // Save Settings Handler
     document.getElementById('save-settings-btn').addEventListener('click', async () => {
       const exitVal = document.getElementById('setting-exit-readers').value;
       const musterVal = document.getElementById('setting-muster-readers').value;
@@ -375,19 +377,19 @@
           : `<span class="text-slate-600 font-mono text-xs">-</span>`;
 
         tr.innerHTML = `
-          <td class="px-6 py-4.5 font-bold text-white text-base">${u.user_name}</td>
-          <td class="px-6 py-4.5 text-slate-200 font-semibold text-sm">${u.company_name || 'N/A'}</td>
-          <td class="px-6 py-4.5 text-sm">${phoneDisplay}</td>
-          <td class="px-6 py-4.5">
+          <td class="px-8 py-5 font-bold text-white text-base">${u.user_name}</td>
+          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${u.company_name || 'N/A'}</td>
+          <td class="px-8 py-5 text-sm">${phoneDisplay}</td>
+          <td class="px-8 py-5">
             <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${badgeStyle}">
               <span class="h-2 w-2 rounded-full ${badgeDot}"></span>
               ${u.status}
             </span>
           </td>
-          <td class="px-6 py-4.5 text-slate-200 font-semibold text-sm">${u.zone_name || '-'}</td>
-          <td class="px-6 py-4.5 text-slate-200 font-medium text-sm">${u.last_zone || '-'}</td>
-          <td class="px-6 py-4.5 text-slate-400 text-xs font-medium">${new Date(u.last_updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}</td>
-          <td class="px-6 py-4.5">${actionButton}</td>
+          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${u.zone_name || '-'}</td>
+          <td class="px-8 py-5 text-slate-200 font-medium text-sm">${u.last_zone || '-'}</td>
+          <td class="px-8 py-5 text-slate-400 text-xs font-medium">${new Date(u.last_updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}</td>
+          <td class="px-8 py-5">${actionButton}</td>
         `;
         tbody.appendChild(tr);
       });
