@@ -68,19 +68,20 @@
         <p class="text-base text-slate-400 mt-1">Integrated 2N Access Commander presence monitoring</p>
       </div>
 
-      <!-- Header Controls: Device Status & Action Buttons -->
+      <!-- Header Controls: Clickable Device Health & Action Buttons -->
       <div class="flex flex-wrap items-center gap-4 self-start lg:self-auto">
-        <!-- Device Health Widget -->
-        <div class="glass-card px-4 py-2.5 rounded-xl flex items-center gap-3 border border-slate-800 shadow-md">
-          <div id="device-dot" class="h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]"></div>
+        
+        <!-- Interactive Aggregate Device Health Widget -->
+        <button id="open-device-modal-btn" class="glass-card px-4 py-2.5 rounded-xl flex items-center gap-3 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 transition shadow-md text-left group">
+          <div id="device-summary-dot" class="h-2.5 w-2.5 rounded-full bg-slate-500 shrink-0"></div>
           <div>
             <div class="flex items-center gap-2">
-              <span id="device-name" class="text-xs font-bold text-slate-200">Remote Muster Unit</span>
-              <span id="device-status-badge" class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20">OFFLINE</span>
+              <span id="device-summary-title" class="text-xs font-bold text-slate-200 group-hover:text-white transition">Hardware Status</span>
+              <span id="device-summary-badge" class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">CHECKING</span>
             </div>
-            <div id="device-last-seen" class="text-[11px] text-slate-400 mt-0.5">Last check-in: Checking...</div>
+            <div id="device-summary-desc" class="text-[11px] text-slate-400 mt-0.5">Click to view all devices ↗</div>
           </div>
-        </div>
+        </button>
 
         <button id="open-settings-btn" class="px-5 py-2.5 text-sm font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition flex items-center gap-2 shadow-md">
           <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -135,11 +136,11 @@
         <!-- Search Bar -->
         <div class="relative w-full lg:w-96">
           <svg class="absolute left-4 top-3.5 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input id="search-input" type="text" placeholder="Search by name, company, card, zone..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-12 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <input id="search-input" type="text" placeholder="Search by name, company, zone..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-12 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
         </div>
       </div>
 
-      <!-- Personnel Table -->
+      <!-- Personnel Table (Card CSN removed from display) -->
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-200">
           <thead class="bg-slate-900/90 text-slate-300 font-bold uppercase tracking-wider text-xs border-b border-slate-800">
@@ -147,7 +148,6 @@
               <th class="px-8 py-5">User Name</th>
               <th class="px-8 py-5">Company</th>
               <th class="px-8 py-5">Phone Number</th>
-              <th class="px-8 py-5">Card CSN</th>
               <th class="px-8 py-5">Status</th>
               <th class="px-8 py-5">Zone</th>
               <th class="px-8 py-5">Last Reader</th>
@@ -157,7 +157,7 @@
           </thead>
           <tbody id="user-table-body" class="divide-y divide-slate-800/80 font-medium">
             <tr>
-              <td colspan="9" class="px-8 py-10 text-center text-slate-500">Loading personnel data...</td>
+              <td colspan="8" class="px-8 py-10 text-center text-slate-500">Loading personnel data...</td>
             </tr>
           </tbody>
         </table>
@@ -182,6 +182,33 @@
       </p>
     </footer>
 
+  </div>
+
+  <!-- DEVICE STATUS MODAL (MULTI-UNIT OVERVIEW) -->
+  <div id="device-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card w-full max-w-2xl rounded-2xl p-6 shadow-2xl border border-slate-700 flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div>
+          <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
+            <span>📡 Hardware & Muster Units Status</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Heartbeat verification and operational health for all remote readers</p>
+        </div>
+        <button id="close-device-modal-btn" class="text-slate-400 hover:text-white transition text-2xl font-bold">&times;</button>
+      </div>
+      
+      <!-- Device Cards List -->
+      <div id="device-list-container" class="space-y-3 py-5 overflow-y-auto flex-1 pr-1">
+        <div class="text-center py-8 text-slate-500 text-sm">Loading device records...</div>
+      </div>
+
+      <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs text-slate-400">
+        <span>Units report heartbeats twice daily (14h threshold)</span>
+        <button id="close-device-btn" class="px-5 py-2 text-xs font-bold text-slate-200 bg-slate-800 hover:bg-slate-700 rounded-xl transition border border-slate-700">
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- SETTINGS MODAL -->
@@ -227,6 +254,7 @@
     const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let usersMap = new Map();
+    let devicesMap = new Map();
     let currentFilter = 'ALL';
     const OFFLINE_THRESHOLD_MS = 14 * 60 * 60 * 1000; // 14 hours threshold
 
@@ -236,6 +264,7 @@
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
     const settingsModal = document.getElementById('settings-modal');
+    const deviceModal = document.getElementById('device-modal');
 
     // ==========================================
     // AUTHENTICATION STATE & HANDLERS
@@ -279,6 +308,18 @@
         renderUI();
       });
     });
+
+    // ==========================================
+    // DEVICE MODAL HANDLERS
+    // ==========================================
+    document.getElementById('open-device-modal-btn').addEventListener('click', () => {
+      renderDeviceModal();
+      deviceModal.classList.remove('hidden');
+    });
+
+    const closeDeviceModal = () => deviceModal.classList.add('hidden');
+    document.getElementById('close-device-modal-btn').addEventListener('click', closeDeviceModal);
+    document.getElementById('close-device-btn').addEventListener('click', closeDeviceModal);
 
     // ==========================================
     // SETTINGS MODAL HANDLERS
@@ -331,67 +372,120 @@
     };
 
     // ==========================================
-    // DEVICE HEALTH MONITORING
+    // MULTI-DEVICE HEALTH LOGIC & RENDERING
     // ==========================================
-    function updateDeviceUI(device) {
-      const dotEl = document.getElementById("device-dot");
-      const nameEl = document.getElementById("device-name");
-      const badgeEl = document.getElementById("device-status-badge");
-      const lastSeenEl = document.getElementById("device-last-seen");
+    function renderDeviceSummary() {
+      const dotEl = document.getElementById("device-summary-dot");
+      const titleEl = document.getElementById("device-summary-title");
+      const badgeEl = document.getElementById("device-summary-badge");
+      const descEl = document.getElementById("device-summary-desc");
 
-      if (!device) {
-        badgeEl.textContent = "OFFLINE";
-        badgeEl.className = "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20";
-        dotEl.className = "h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]";
-        lastSeenEl.textContent = "No heartbeat recorded";
+      const devices = Array.from(devicesMap.values());
+      if (devices.length === 0) {
+        dotEl.className = "h-2.5 w-2.5 rounded-full bg-slate-500";
+        badgeEl.className = "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700";
+        badgeEl.textContent = "NO UNITS";
+        titleEl.textContent = "Hardware Status";
+        descEl.textContent = "No registered devices";
         return;
       }
 
-      const lastSeenDate = new Date(device.last_seen);
-      const timeDiff = Date.now() - lastSeenDate.getTime();
-      const isOnline = timeDiff < OFFLINE_THRESHOLD_MS;
+      let offlineCount = 0;
+      devices.forEach(d => {
+        const lastSeen = new Date(d.last_seen).getTime();
+        if (Date.now() - lastSeen >= OFFLINE_THRESHOLD_MS) {
+          offlineCount++;
+        }
+      });
 
-      nameEl.textContent = device.device_name || "Muster Unit";
-
-      if (isOnline) {
+      if (offlineCount === 0) {
         dotEl.className = "h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]";
         badgeEl.className = "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-        badgeEl.textContent = "ONLINE";
+        badgeEl.textContent = "ALL ONLINE";
+        titleEl.textContent = `${devices.length} Muster Unit${devices.length > 1 ? 's' : ''}`;
+        descEl.textContent = "All units operational ↗";
       } else {
-        dotEl.className = "h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]";
+        dotEl.className = "h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse";
         badgeEl.className = "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20";
-        badgeEl.textContent = "OFFLINE";
+        badgeEl.textContent = `${offlineCount} OFFLINE`;
+        titleEl.textContent = "Unit Attention Needed";
+        descEl.textContent = `${offlineCount} of ${devices.length} units offline ↗`;
       }
-
-      lastSeenEl.textContent = `Last check-in: ${lastSeenDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} (${lastSeenDate.toLocaleDateString()})`;
     }
 
-    async function loadDeviceHealth() {
-      const { data, error } = await db
-        .from("device_health")
-        .select("*")
-        .eq("device_id", "MUSTER_UNIT_01")
-        .maybeSingle();
+    function renderDeviceModal() {
+      const container = document.getElementById("device-list-container");
+      const devices = Array.from(devicesMap.values());
 
+      if (devices.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-slate-500 text-sm">No muster devices registered in Supabase.</div>`;
+        return;
+      }
+
+      container.innerHTML = devices.map(d => {
+        const lastSeenDate = new Date(d.last_seen);
+        const timeDiff = Date.now() - lastSeenDate.getTime();
+        const isOnline = timeDiff < OFFLINE_THRESHOLD_MS;
+
+        const badgeClass = isOnline 
+          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+          : "bg-red-500/10 text-red-400 border-red-500/30";
+        const dotClass = isOnline ? "bg-emerald-400" : "bg-red-400";
+        const statusText = isOnline ? "ONLINE" : "OFFLINE";
+
+        return `
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-3">
+              <div class="mt-1 h-3 w-3 rounded-full ${dotClass} shrink-0"></div>
+              <div>
+                <div class="font-bold text-white text-sm">${escapeHtml(d.device_name || d.device_id)}</div>
+                <div class="text-xs text-slate-400 font-mono mt-0.5">ID: ${escapeHtml(d.device_id)}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 self-end sm:self-center">
+              <div class="text-right">
+                <div class="text-xs text-slate-300 font-semibold">${lastSeenDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                <div class="text-[11px] text-slate-500">${lastSeenDate.toLocaleDateString()}</div>
+              </div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${badgeClass}">
+                ${statusText}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadDevices() {
+      const { data, error } = await db.from("device_health").select("*").order("device_name", { ascending: true });
       if (!error && data) {
-        updateDeviceUI(data);
-      } else {
-        updateDeviceUI(null);
+        devicesMap.clear();
+        data.forEach(d => devicesMap.set(d.device_id, d));
+        renderDeviceSummary();
+        if (!deviceModal.classList.contains("hidden")) {
+          renderDeviceModal();
+        }
       }
     }
 
-    function subscribeDeviceHealth() {
+    function subscribeDevices() {
       db.channel('public:device_health')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'device_health' }, (payload) => {
-          if (payload.new && payload.new.device_id === "MUSTER_UNIT_01") {
-            updateDeviceUI(payload.new);
+          if (payload.eventType === "DELETE") {
+            devicesMap.delete(payload.old.device_id);
+          } else if (payload.new) {
+            devicesMap.set(payload.new.device_id, payload.new);
+          }
+          renderDeviceSummary();
+          if (!deviceModal.classList.contains("hidden")) {
+            renderDeviceModal();
           }
         })
         .subscribe();
     }
 
     // ==========================================
-    // INITIALIZATION & REALTIME DATA
+    // INITIALIZATION & REALTIME PRESENCE DATA
     // ==========================================
     async function initDashboard() {
       // 1. Fetch Initial Personnel Data
@@ -414,13 +508,13 @@
         })
         .subscribe();
 
-      // 3. Load & Subscribe Device Health
-      loadDeviceHealth();
-      subscribeDeviceHealth();
+      // 3. Load & Subscribe Multi-Device Health
+      loadDevices();
+      subscribeDevices();
     }
 
     // ==========================================
-    // UI RENDERER
+    // UI RENDERER (CARD CSN REMOVED)
     // ==========================================
     function renderUI() {
       const users = Array.from(usersMap.values());
@@ -438,7 +532,7 @@
 
         if (currentFilter !== 'ALL' && s !== currentFilter) return;
 
-        const match = [u.user_name, u.company_name, u.telephone_number, u.card_number, u.last_zone, u.zone_name]
+        const match = [u.user_name, u.company_name, u.telephone_number, u.last_zone, u.zone_name]
           .some(field => field && field.toLowerCase().includes(query));
 
         if (query && !match) return;
@@ -460,7 +554,7 @@
         const phoneDisplay = u.telephone_number && u.telephone_number !== 'N/A' 
           ? `<a href="tel:${u.telephone_number}" class="text-indigo-400 hover:underline flex items-center gap-1.5 font-semibold">
                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-               ${u.telephone_number}
+               ${escapeHtml(u.telephone_number)}
              </a>`
           : '<span class="text-slate-500">N/A</span>';
 
@@ -471,18 +565,17 @@
           : `<span class="text-slate-600 font-mono text-xs">-</span>`;
 
         tr.innerHTML = `
-          <td class="px-8 py-5 font-bold text-white text-base">${u.user_name || 'Unknown'}</td>
-          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${u.company_name || 'N/A'}</td>
+          <td class="px-8 py-5 font-bold text-white text-base">${escapeHtml(u.user_name || 'Unknown')}</td>
+          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${escapeHtml(u.company_name || 'N/A')}</td>
           <td class="px-8 py-5 text-sm">${phoneDisplay}</td>
-          <td class="px-8 py-5 font-mono text-xs text-indigo-300">${u.card_number || '—'}</td>
           <td class="px-8 py-5">
             <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold border ${badgeStyle}">
               <span class="h-2 w-2 rounded-full ${badgeDot}"></span>
               ${s}
             </span>
           </td>
-          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${u.zone_name || '-'}</td>
-          <td class="px-8 py-5 text-slate-200 font-medium text-sm">${u.last_zone || '-'}</td>
+          <td class="px-8 py-5 text-slate-200 font-semibold text-sm">${escapeHtml(u.zone_name || '-')}</td>
+          <td class="px-8 py-5 text-slate-200 font-medium text-sm">${escapeHtml(u.last_zone || '-')}</td>
           <td class="px-8 py-5 text-slate-400 text-xs font-medium">${u.last_updated ? new Date(u.last_updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '-'}</td>
           <td class="px-8 py-5">${actionButton}</td>
         `;
@@ -490,7 +583,7 @@
       });
 
       if (tbody.children.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="px-8 py-10 text-center text-slate-500">No personnel match your search or filter criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="px-8 py-10 text-center text-slate-500">No personnel match your search or filter criteria.</td></tr>`;
       }
 
       document.getElementById('count-onsite').textContent = onsite;
@@ -498,10 +591,26 @@
       document.getElementById('count-offsite').textContent = offsite;
     }
 
+    function escapeHtml(text) {
+      if (!text) return "";
+      return String(text).replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[m]));
+    }
+
     document.getElementById('search-input').addEventListener('input', renderUI);
 
-    // Periodic evaluation of device offline state every 60s
-    setInterval(loadDeviceHealth, 60 * 1000);
+    // Periodic evaluation of device offline states (every 60s)
+    setInterval(() => {
+      renderDeviceSummary();
+      if (!deviceModal.classList.contains("hidden")) {
+        renderDeviceModal();
+      }
+    }, 60 * 1000);
   </script>
 </body>
 </html>
